@@ -1,7 +1,7 @@
 # VEEAM Test Task
 # Made by Daniel Lages
 # 
-# Goal: Program that synchronizes two folders
+# Goal: Script that synchronizes two folders
 #
 # Objectives:
 #   - One-way synchronization
@@ -10,8 +10,7 @@
 #   - Ask user inputs
 #
 # TODO:
-#   line 53
-#   delete items in replica folder that were deleted in source folder
+#   Check if file or folder was modified in the source
 
 import os
 import shutil
@@ -52,8 +51,26 @@ def sync_folders(source, replica):
         else:
             if not os.path.exists(item_rep):
                 print(f"Copying '{item_src}' to '{item_rep}'")  # log on console
-                shutil.copy(item_src, item_rep) # TODO: check difference between copy and copy2
+                shutil.copy2(item_src, item_rep)
 
+    # Deletes items in replica that are not in source
+    delete_extra_items(source, replica)
+
+def delete_extra_items(source, replica):
+    for dirpath, dirnames, filenames in os.walk(replica):
+        for file in filenames:
+            file_rep = os.path.join(dirpath, file)
+            file_src = os.path.join(source, os.path.relpath(file_rep, replica)) # corresponding path in the source folder
+            if not os.path.exists(file_src):
+                print(f"Deleting file '{file_rep}'")
+                os.remove(file_rep)
+
+        for folder in dirnames:
+            folder_rep = os.path.join(dirpath, folder)
+            folder_src = os.path.join(source, os.path.relpath(folder_rep, replica))
+            if not os.path.exist(folder_src):
+                print(f"Deleting folder '{folder_rep}'")
+                os.rmdir(folder_rep)
 
 def main():
     # Ask user inputs
