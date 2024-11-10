@@ -10,7 +10,7 @@
 #   - Ask user inputs
 #
 # TODO:
-#   There is an error that happens when the code tries to get md5_hash of a non existing file in the source folder
+#   Add synchroniztion interval
 
 import os
 import shutil
@@ -37,18 +37,21 @@ def md5_hash(path):
 
     # Handle file
     if path.is_file():
-        hash.update(open(path, 'rb').read())
+        # If I don't use chunks it will raise a Permissions error
+        with open(path, 'rb') as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash.update(chunk)
     # Handle folders
     elif path.is_dir():
         # Recursively go through the folder items
         for sub_path in path.iterdir():
             hash.update(sub_path.name.encode('utf-8'))  # include names
             if sub_path.is_file():
-                hash.update(open(sub_path, 'rb').read())
+                with open(sub_path, 'rb') as f:
+                    for chunk in iter(lambda: f.read(4096), b""):
+                        hash.update(chunk)
             else:
-                hash.update(sub_path.name.encode('utf-8'))
-    else:
-        raise ValueError(f"Unknown item in '{path}'")
+                hash.update(md5_hash(sub_path).encode('utf-8'))
 
     return hash.hexdigest()
 
@@ -75,7 +78,8 @@ def sync_folders(source, replica):
             else:
                 if md5_hash(item_src) != md5_hash(item_rep):
                     print(f"Updating folder '{item_rep}'")
-                    os.utime(item_rep, (os.path.getatime(item_src), os.path.getmtime(item_rep)))    # update timestamp and name
+                    shutil.rmtree(item_rep)                 # remove outdated folder
+                    shutil.copytree(item_src, item_rep)     # copy folder
         # Handle files
         else:
             if not os.path.exists(item_rep):
