@@ -16,6 +16,9 @@ The program should maintain a full, identical copy of source folder at replica f
 - It is undesirable to use third-party libraries that implement folder synchronization
 - It is allowed to use external libraries implementing other well-known algorightms
 
+## Demo Video
+[Watch demo video](./demo.mp4)
+
 ## Author
 
 * **Daniel Lages** - [daniellages](https://github.com/daniellages)
