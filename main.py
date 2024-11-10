@@ -117,7 +117,7 @@ def delete_extra_items(source, replica, log):
             folder_src = os.path.join(source, os.path.relpath(folder_rep, replica))
             if not os.path.exists(folder_src):
                 log_action(log, f"Deleting folder '{folder_rep}'")
-                os.rmdir(folder_rep)
+                shutil.rmtree(folder_rep)
 
 def main():
     # Ask user inputs
