@@ -5,16 +5,17 @@
 #
 # Objectives:
 #   - One-way synchronization
-#   - Synchronization performed perodically
+#   - Synchronization performed periodically
 #   - Log actions
 #   - Ask user inputs
 #
 # TODO:
-#   Add synchroniztion interval
+#   Log actions in a different file
 
 import os
 import shutil
 import hashlib
+import time
 from pathlib import Path
 
 # Check if folders exist
@@ -115,12 +116,14 @@ def main():
     print("Folder Synchronization script")
     source_path = input("Enter source folder path:")
     replica_path = input("Enter replica folder path:")
-    interval = input("Enter synchronization interval:")
+    interval = int(input("Enter synchronization interval (seconds):"))
     log_path = input("Enter log folder path:")
     
     if check_folders(source_path, replica_path, log_path):
         while True:
             sync_folders(source_path, replica_path)
+            print(f"Folders synchronized! Waiting '{interval}' seconds for next iteration...")
+            time.sleep(interval)    # Synchronized periodically
 
 if __name__ == "__main__":
     main()
