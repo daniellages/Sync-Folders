@@ -17,7 +17,7 @@ The program should maintain a full, identical copy of source folder at replica f
 - It is allowed to use external libraries implementing other well-known algorightms
 
 ## Demo Video
-[Watch demo video](./demo.mp4)
+[![Watch demo video]()](https://youtu.be/ec3VzWaGVKI)
 
 ## Author
 
