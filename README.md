@@ -9,7 +9,7 @@ The program should maintain a full, identical copy of source folder at replica f
 
 <p align="center">
     <a href="#readme">
-        <img alt="Demo Video" src="https://github.com/daniellages/Sync-Folders/blob/main/demo%20video.gif">
+        <img alt="Demo Video" src="https://github.com/daniellages/Sync-Folders/blob/main/DemoVideo.gif">
     </a>
 </p>
 
