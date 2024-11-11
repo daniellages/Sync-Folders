@@ -8,9 +8,6 @@
 #   - Synchronization performed periodically
 #   - Log actions
 #   - Ask user inputs
-#
-# TODO
-# - Check why permissions error happens when i dont use chunks
 
 import os
 import sys
@@ -55,9 +52,9 @@ def md5_checksum(path):
 
     # Handle file
     if path.is_file():
-        # If I don't use chunks it will raise a Permissions error
+        # Reading a file in chunks bypasses windoes permission restrictions
         with open(path, 'rb') as f:
-            for chunk in iter(lambda: f.read(4096), b""):
+            for chunk in iter(lambda: f.read(4096), b""):   # chunks of 4KB (standard chunk size)
                 hash.update(chunk)
     # Handle folders
     elif path.is_dir():
@@ -133,9 +130,11 @@ def main():
     
     if check_paths(source_path, replica_path):
         create_file_logger(log_path)
+        # Log into file input parameters
         logger.info(f"Source Path: '{source_path}")
         logger.info(f"Replica Path: '{replica_path}")
         logger.info(f"Interval: '{interval}")
+        # Main loop
         while True:
             sync_folders(source_path, replica_path, log_path)
             print(f"Folders synchronized! Waiting '{interval}' seconds for next iteration...")
